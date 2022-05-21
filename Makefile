@@ -16,10 +16,12 @@
 
 default: help
 
+containerd_version  =
 containerd_clone    =     git@github.com:kris-nova/containerd.git
+critools_clone      =     git@github.com:kris-nova/cri-tools.git
 runc_clone          =     git@github.com:kris-nova/runc.git
 kubernetes_version  =     v1.24.0
-kubernetes_clone    =     git@github.com:kubernetes/kubernetes.git
+kubernetes_clone    =     git@github.com:kris-nova/kubernetes.git
 make_flags          =     -j32
 ebtables_tarball    =     ebtables.tar.gz
 ebtables_clone      =     https://aur.archlinux.org/cgit/aur.git/snapshot/$(ebtables_tarball)
@@ -32,7 +34,6 @@ bin: ## Add the bin scripts to $PATH
 	@cp -rv bin/* /usr/local/bin
 
 containerd: clone ## Install containerd from local source
-	[ ! -d containerd ] && clone
 	cd containerd && make $(make_flags)
 
 runc: clone ## Install runc from local source
@@ -42,20 +43,25 @@ kubernetes: clone kubelet kubeadm ## Install kubernetes from local source
 kubelet: clone ## Install kubelet from local source
 	cd kubernetes && make $(make_flags) kubelet
 
-kubeadm: clone ebtables ## Install kubernetes from local source
+kubeadm: clone ebtables cri-tools ## Install kubernetes from local source
 	cd kubernetes && make $(make_flags) kubeadm
+
+critools: clone ## Install critools (crictl is required for kubeadm)
+	cd cri-tools && make
 
 ebtables: ## Install arch linux ebtables
 	mkdir -p ebtables
 	wget $(ebtables_clone) && tar -xzf $(ebtables_tarball)
 	cd ebtables && makepkg -si
 
-install: bin install_containerd install_runc install_kubernetes ## Global install (all the artifacts)
+install: bin install_containerd install_runc install_kubernetes install_critools ## Global install (all the artifacts)
 
 clone: ## Clone containerd from Makefile flags
 	@if [ ! -d containerd ]; then git clone $(containerd_clone); fi
 	@if [ ! -d runc ]; then git clone $(runc_clone); fi
 	@if [ ! -d kubernetes ]; then git clone $(kubernetes_clone); cd kubernetes && git checkout tags/$(kubernetes_version) -b $(kubernetes_version); fi
+	@if [ ! -d cri-tools ]; then git clone $(critools_clone); fi
+
 
 logs: ## Run the logs
 	journalctl -f -u containerd -u kubelet
@@ -66,6 +72,9 @@ restart: ## Restart systemd services
 	systemctl restart kubelet
 
 install_runc: ## Install runc
+
+install_critools: ## Install critools
+	cd cri-tools && make $(make_flags) install
 
 install_kubernetes: ## Install kuberneretes
 	cp -rv kubernetes/_output/bin/* /usr/local/bin

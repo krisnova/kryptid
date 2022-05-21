@@ -57,7 +57,6 @@ critools: clone ## Install critools (crictl is required for kubeadm)
 
 archlinux: ebtables_aur conntrack_aur ## Arch linux specific dependencies. Good luck everyone else.
 
-
 ebtables_aur: ## Install arch linux ebtables
 	mkdir -p ebtables
 	wget $(ebtables_download) && tar -xzf $(ebtables_tarball)
@@ -79,6 +78,8 @@ clone: ## Clone containerd from Makefile flags
 logs: ## Run the logs
 	journalctl -f -u containerd -u kubelet
 
+kubelet-errors: ## Run the kubelet logs
+	journalctl -fu kubelet | grep --color -A 1 -B 7 "Error: " 
 enable: ## Enable systemd services
 	systemctl daemon-reload
 	systemctl enable kubelet

@@ -1,0 +1,30 @@
+#!/bin/bash
+# =========================================================================== #
+#            MIT License Copyright (c) 2022 Kris Nóva <kris@nivenly.com>      #
+#                                                                             #
+#                 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓                 #
+#                 ┃   ███╗   ██╗ ██████╗ ██╗   ██╗ █████╗   ┃                 #
+#                 ┃   ████╗  ██║██╔═████╗██║   ██║██╔══██╗  ┃                 #
+#                 ┃   ██╔██╗ ██║██║██╔██║██║   ██║███████║  ┃                 #
+#                 ┃   ██║╚██╗██║████╔╝██║╚██╗ ██╔╝██╔══██║  ┃                 #
+#                 ┃   ██║ ╚████║╚██████╔╝ ╚████╔╝ ██║  ██║  ┃                 #
+#                 ┃   ╚═╝  ╚═══╝ ╚═════╝   ╚═══╝  ╚═╝  ╚═╝  ┃                 #
+#                 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛                 #
+#                                                                             #
+#                        This machine kills fascists.                         #
+#                                                                             #
+# =========================================================================== #
+
+
+./kubeadm-reset
+
+# Calico Pod CIDR = 192.168.0.0/16
+
+kubeadm init \
+        --pod-network-cidr=192.168.0.0/16 \
+        --apiserver-advertise-address=10.6.6.100 \
+        --apiserver-cert-extra-sans="nivenly.com" \
+        --control-plane-endpoint="nivenly.com" \
+        --node-name="alice"
+
+cp /etc/kubernetes/admin.conf /home/novix/.kube/config

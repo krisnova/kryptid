@@ -30,8 +30,8 @@ make_flags          =     -j32
 # Arch linux specific
 ebtables_tarball    =     ebtables.tar.gz
 ebtables_download   =     https://aur.archlinux.org/cgit/aur.git/snapshot/$(ebtables_tarball)
-conntrack_tarbll    =     conntrack-tools-1.4.6.tar.bz2
-conntrack_download  =     https://www.netfilter.org/projects/conntrack-tools/files/$(conntrack_tarbll)
+conntrack_zst       =     conntrack-tools-1.4.6-2-x86_64.pkg.tar.zst
+conntrack_download  =     https://mirror.ubrco.de/archlinux/extra/os/x86_64/$(conntrack_zst)
 
 all: containerd runc kubernetes ## Install containerd and runc from source!
 
@@ -64,9 +64,8 @@ ebtables_aur: ## Install arch linux ebtables
 	cd ebtables && makepkg -si
 
 conntrack_aur: ## Install arch linux ebtables
-	mkdir -p conntrack
-	wget $(conntrack_download) && tar -xjf $(conntrack_tarball) -C conntrack
-	cd conntrack && makepkg -si
+	wget $(conntrack_download)
+	pacman -U $(conntrack_zst)
 
 install: bin install_containerd install_runc install_kubernetes install_critools ## Global install (all the artifacts)
 	@cp -rv etc/* /etc
@@ -106,7 +105,7 @@ clean:
 	rm -rvf runc*
 	rm -rvf cri-tools*
 	rm -rvf ebtables*
-	rm -rvf *.tar.gz
+	rm -rvf *.tar.*
 
 .PHONY: help
 help:  ## 🤔 Show help messages for make targets

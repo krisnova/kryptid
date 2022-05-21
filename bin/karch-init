@@ -16,7 +16,7 @@
 # =========================================================================== #
 
 
-./kubeadm-reset
+karch-reset
 
 # Calico Pod CIDR = 192.168.0.0/16
 
@@ -27,4 +27,4 @@ kubeadm init \
         --control-plane-endpoint="nivenly.com" \
         --node-name="alice"
 
-cp /etc/kubernetes/admin.conf /home/novix/.kube/config
+cp /etc/kubernetes/admin.conf ${HOME}/.kube/config

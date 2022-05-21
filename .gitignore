@@ -5,3 +5,4 @@ cri-tools
 kubernetes
 .idea
 ebtables*
+conntrack*

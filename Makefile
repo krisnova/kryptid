@@ -37,7 +37,7 @@ all: containerd runc kubernetes ## Install containerd and runc from source!
 
 .PHONY: bin
 bin: ## Add the bin scripts to $PATH
-	@cp -rv bin/* /usr/local/bin
+	@cp -rv bin/* /usr/bin
 
 containerd: clone ## Install containerd from local source
 	cd containerd && make $(make_flags)
@@ -79,6 +79,11 @@ clone: ## Clone containerd from Makefile flags
 logs: ## Run the logs
 	journalctl -f -u containerd -u kubelet
 
+enable: ## Enable systemd services
+	systemctl daemon-reload
+	systemctl enable kubelet
+	systemctl enable containerd
+
 restart: ## Restart systemd services
 	systemctl daemon-reload
 	systemctl restart containerd
@@ -90,11 +95,11 @@ install_critools: ## Install critools
 	cd cri-tools && make $(make_flags) install
 
 install_kubernetes: ## Install kuberneretes
-	cp -rv kubernetes/_output/bin/* /usr/local/bin
+	cp -rv kubernetes/_output/bin/* /usr/bin
 
 install_containerd: ## Install containerd
 	cd containerd && make $(make_flags) install
-	@cp -v containerd/containerd.service /lib/systemd/system/containerd.service
+	@cp -v containerd/containerd.service ./etc/systemd/system/containerd.service
 
 clean:
 	@echo "This will DESTROY local copies of kubernetes, conntrack, cri-tools, containerd, runc, ebtables"

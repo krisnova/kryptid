@@ -16,13 +16,18 @@
 
 default: help
 
-containerd_version  =
-containerd_clone    =     git@github.com:kris-nova/containerd.git
-critools_clone      =     git@github.com:kris-nova/cri-tools.git
-runc_clone          =     git@github.com:kris-nova/runc.git
+# Generic config
 kubernetes_version  =     v1.24.0
-kubernetes_clone    =     git@github.com:kris-nova/kubernetes.git
+kubernetes_clone    =     git@github.com:kubernetes/kubernetes.git
+containerd_version  =     v1.6.4
+containerd_clone    =     git@github.com:containerd/containerd.git
+runc_version        =     v1.1.2
+runc_clone          =     git@github.com:opencontainers/runc.git
+critools_version    =     v1.24.1
+critools_clone      =     git@github.com:kubernetes-sigs/cri-tools.git
 make_flags          =     -j32
+
+# Arch linux specific
 ebtables_tarball    =     ebtables.tar.gz
 ebtables_clone      =     https://aur.archlinux.org/cgit/aur.git/snapshot/$(ebtables_tarball)
 
@@ -43,13 +48,13 @@ kubernetes: clone kubelet kubeadm ## Install kubernetes from local source
 kubelet: clone ## Install kubelet from local source
 	cd kubernetes && make $(make_flags) kubelet
 
-kubeadm: clone ebtables cri-tools ## Install kubernetes from local source
+kubeadm: clone cri-tools ## Install kubernetes from local source
 	cd kubernetes && make $(make_flags) kubeadm
 
 critools: clone ## Install critools (crictl is required for kubeadm)
 	cd cri-tools && make
 
-ebtables: ## Install arch linux ebtables
+ebtables_aur: ## Install arch linux ebtables
 	mkdir -p ebtables
 	wget $(ebtables_clone) && tar -xzf $(ebtables_tarball)
 	cd ebtables && makepkg -si
@@ -57,11 +62,10 @@ ebtables: ## Install arch linux ebtables
 install: bin install_containerd install_runc install_kubernetes install_critools ## Global install (all the artifacts)
 
 clone: ## Clone containerd from Makefile flags
-	@if [ ! -d containerd ]; then git clone $(containerd_clone); fi
-	@if [ ! -d runc ]; then git clone $(runc_clone); fi
+	@if [ ! -d containerd ]; then git clone $(containerd_clone); cd containerd && git checkout tags/$(containerd_version) -b $(containerd_version); fi
+	@if [ ! -d runc ]; then git clone $(runc_clone); cd runc && git checkout tags/$(runc_version) -b $(runc_version); fi
 	@if [ ! -d kubernetes ]; then git clone $(kubernetes_clone); cd kubernetes && git checkout tags/$(kubernetes_version) -b $(kubernetes_version); fi
-	@if [ ! -d cri-tools ]; then git clone $(critools_clone); fi
-
+	@if [ ! -d cri-tools ]; then git clone $(critools_clone); cd cri-tools && git checkout tags/$(critools_version) -b $(critools_version); fi
 
 logs: ## Run the logs
 	journalctl -f -u containerd -u kubelet
@@ -84,11 +88,12 @@ install_containerd: ## Install containerd
 	@cp -v containerd/containerd.service /lib/systemd/system/containerd.service
 
 clean:
-	@echo "This will DESTROY local copies of kubernetes, containerd, runc, ebtables"
+	@echo "This will DESTROY local copies of kubernetes, cri-tools, containerd, runc, ebtables"
 	read -p "Press any key to continue..."
 	rm -rvf kubernetes
 	rm -rvf containerd
 	rm -rvf runc
+	rm -rvf cri-tools
 	rm -rvf ebtables
 	rm -rvf *.tar.gz
 

@@ -1,7 +1,7 @@
 containerd
 runc
 ebtables
-cri-tools
+cri-tools*
 kubernetes
 .idea
 ebtables*

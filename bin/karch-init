@@ -16,7 +16,7 @@
 # =========================================================================== #
 
 hostname=$(cat /proc/sys/kernel/hostname)
-domain="nivenly.com"
+domain="localhost"
 ip="10.6.6.200"
 podcidr="192.168.0.0/16" # Taken from Calico documentation
 

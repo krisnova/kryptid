@@ -29,10 +29,11 @@ make_flags          =     -j32
 
 # Arch linux specific
 ebtables_tarball    =     ebtables.tar.gz
-ebtables_clone      =     https://aur.archlinux.org/cgit/aur.git/snapshot/$(ebtables_tarball)
+ebtables_download   =     https://aur.archlinux.org/cgit/aur.git/snapshot/$(ebtables_tarball)
+conntrack_tarbll    =     conntrack-tools-1.4.6.tar.bz2
+conntrack_download  =     https://www.netfilter.org/projects/conntrack-tools/files/$(conntrack_tarbll)
 
 all: containerd runc kubernetes ## Install containerd and runc from source!
-	@cp -rv etc/* /etc
 
 .PHONY: bin
 bin: ## Add the bin scripts to $PATH
@@ -54,12 +55,21 @@ kubeadm: clone cri-tools ## Install kubernetes from local source
 critools: clone ## Install critools (crictl is required for kubeadm)
 	cd cri-tools && make
 
+archlinux: ebtables_aur conntrack_aur ## Arch linux specific dependencies. Good luck everyone else.
+
+
 ebtables_aur: ## Install arch linux ebtables
 	mkdir -p ebtables
-	wget $(ebtables_clone) && tar -xzf $(ebtables_tarball)
+	wget $(ebtables_download) && tar -xzf $(ebtables_tarball)
 	cd ebtables && makepkg -si
 
+conntrack_aur: ## Install arch linux ebtables
+	mkdir -p conntrack
+	wget $(conntrack_download) && tar -xjf $(conntrack_tarball) -C conntrack
+	cd conntrack && makepkg -si
+
 install: bin install_containerd install_runc install_kubernetes install_critools ## Global install (all the artifacts)
+	@cp -rv etc/* /etc
 
 clone: ## Clone containerd from Makefile flags
 	@if [ ! -d containerd ]; then git clone $(containerd_clone); cd containerd && git checkout tags/$(containerd_version) -b $(containerd_version); fi
@@ -88,13 +98,14 @@ install_containerd: ## Install containerd
 	@cp -v containerd/containerd.service /lib/systemd/system/containerd.service
 
 clean:
-	@echo "This will DESTROY local copies of kubernetes, cri-tools, containerd, runc, ebtables"
+	@echo "This will DESTROY local copies of kubernetes, conntrack, cri-tools, containerd, runc, ebtables"
 	read -p "Press any key to continue..."
-	rm -rvf kubernetes
-	rm -rvf containerd
-	rm -rvf runc
-	rm -rvf cri-tools
-	rm -rvf ebtables
+	rm -rvf kubernetes*
+	rm -rvf containerd*
+	rm -rvf conntrack*
+	rm -rvf runc*
+	rm -rvf cri-tools*
+	rm -rvf ebtables*
 	rm -rvf *.tar.gz
 
 .PHONY: help

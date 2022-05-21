@@ -79,7 +79,7 @@ logs: ## Run the logs
 	journalctl -f -u containerd -u kubelet
 
 kubelet-errors: ## Run the kubelet logs
-	journalctl -fu kubelet | grep --color -A 1 -B 7 "Error: " 
+	journalctl -fu kubelet | grep --color -A 1 -B 7 "Error: "
 enable: ## Enable systemd services
 	systemctl daemon-reload
 	systemctl enable kubelet

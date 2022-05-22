@@ -1,0 +1,5 @@
+#!/bin/bash
+
+kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfiguration}" > cluster.yaml
+
+echo "Writing cluster.yaml..."

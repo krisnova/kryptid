@@ -10,3 +10,4 @@ cri-tools*
 ebtables*
 conntrack*
 kubeconfig.out
+cluster.yaml

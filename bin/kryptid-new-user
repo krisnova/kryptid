@@ -12,9 +12,7 @@ kubeadm kubeconfig user \
 	--config cluster.yaml \
 	--org nivenly \
 	--client-name $1 \
-	--validity-period 2160h > kubeconfig.out
-
-echo "Wrote kubeconfig.out"
+	--validity-period 2160h 
 
 sleep 1
 

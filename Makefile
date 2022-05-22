@@ -53,13 +53,16 @@ containerd: clone ## Install containerd from local source
 runc: clone ## Install runc from local source
 	cd runc && make $(make_flags)
 
-kubernetes: clone kubelet kubeadm ## Install kubernetes from local source
+kubernetes: clone kubelet kubeadm kubectl ## Install kubernetes from local source
 
 kubelet: clone ## Install kubelet from local source
 	cd kubernetes && make $(make_flags) kubelet
 
 kubeadm: clone cri-tools ## Install kubernetes from local source
 	cd kubernetes && make $(make_flags) kubeadm
+
+kubectl: clone
+	cd kubernetes && make $(make_flags) kubectl
 
 helm: clone ## Install helm
 	cd helm && make $(make_flags)

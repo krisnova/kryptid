@@ -30,10 +30,14 @@ nerdctl_clone       =     git@github.com:containerd/nerdctl.git
 make_flags          =     -j32
 
 # Arch linux specific
+mirror              =     https://mirror.chaoticum.net/arch
 ebtables_tarball    =     ebtables.tar.gz
 ebtables_download   =     https://aur.archlinux.org/cgit/aur.git/snapshot/$(ebtables_tarball)
 conntrack_zst       =     conntrack-tools-1.4.6-2-x86_64.pkg.tar.zst
-conntrack_download  =     https://mirror.ubrco.de/archlinux/extra/os/x86_64/$(conntrack_zst)
+conntrack_download  =     $(mirror)/extra/os/x86_64/$(conntrack_zst)
+cniplugins_zst      =	  cni-plugins-1.1.1-2-x86_64.pkg.tar.zst
+cniplugins_download =     $(mirror)/community/os/x86_64/$(cniplugins_zst)
+
 
 all: containerd runc kubernetes nerdctl critools ## Install containerd and runc from source!
 
@@ -61,7 +65,7 @@ nerdctl: clone ## Install nerdctl (nerdctl is docker drop-in for containerd)
 critools: clone ## Install critools (crictl is required for kubeadm)
 	cd cri-tools && make $(make_flags)
 
-archlinux: ebtables_aur conntrack_aur ## Arch linux specific dependencies. Good luck everyone else.
+archlinux: ebtables_aur conntrack_aur cniplugins_aur ## Arch linux specific dependencies. Good luck everyone else.
 
 ebtables_aur: ## Install arch linux ebtables
 	mkdir -p ebtables
@@ -71,6 +75,10 @@ ebtables_aur: ## Install arch linux ebtables
 conntrack_aur: ## Install arch linux ebtables
 	wget $(conntrack_download)
 	pacman -U $(conntrack_zst)
+
+cniplugins_aur: ## Install arch linux ebtables
+	wget $(cniplugins_download)
+	pacman -U $(cniplugins_zst)
 
 install: stop bin install_containerd install_runc install_kubernetes install_nerdctl install_critools ## Global install (all the artifacts)
 	@cp -rv etc/* /etc

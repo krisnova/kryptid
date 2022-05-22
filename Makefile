@@ -98,8 +98,11 @@ conmon_aur: ## Install arch linux conmon
 	wget $(conmon_download)
 	pacman -U $(conmon_zst)
 
-install: bin install_containerd install_runc install_kubernetes install_nerdctl install_critools install_helm install_crio ## Global install (all the artifacts)
-	@cp -rv etc/* /etc
+install: etc bin install_containerd install_runc install_kubernetes install_nerdctl install_critools install_helm install_crio ## Global install (all the artifacts)
+
+.PHONY: etc
+etc:
+	cp -rv etc/* /etc
 
 clone: ## Clone containerd from Makefile flags
 	@if [ ! -d containerd ]; then git clone $(containerd_clone); cd containerd && git checkout tags/$(containerd_version) -b $(containerd_version); fi

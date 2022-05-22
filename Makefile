@@ -103,7 +103,7 @@ install: bin install_containerd install_runc install_kubernetes install_nerdctl 
 
 clone: ## Clone containerd from Makefile flags
 	@if [ ! -d containerd ]; then git clone $(containerd_clone); cd containerd && git checkout tags/$(containerd_version) -b $(containerd_version); fi
-	@if [ ! -d cri-o ]; then git clone $(crio_clone); cd crio && git checkout tags/$(crio_version) -b $(crio_version); fi
+	@if [ ! -d cri-o ]; then git clone $(crio_clone); cd cri-o && git checkout tags/$(crio_version) -b $(crio_version); fi
 	@if [ ! -d runc ]; then git clone $(runc_clone); cd runc && git checkout tags/$(runc_version) -b $(runc_version); fi
 	@if [ ! -d helm ]; then git clone $(helm_clone); cd helm && git checkout tags/$(helm_version) -b $(helm_version); fi
 	@if [ ! -d nerdctl ]; then git clone $(nerdctl_clone); cd nerdctl && git checkout tags/$(nerdctl_version) -b $(nerdctl_version); fi

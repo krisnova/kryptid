@@ -18,7 +18,10 @@
 hostname=$(cat /proc/sys/kernel/hostname)
 domain="nivenly.com"
 ip="10.6.6.100"
-podcidr="192.168.0.0/16" # Taken from Calico documentation
+#podcidr="192.168.0.0/16" # Calico
+podcidr="10.85.0.0/16"   # Flannel
+#podcidr="10.85.0.0/16"   # Bridge
+
 
 echo "--------------------------------------------------------------"
 echo ""

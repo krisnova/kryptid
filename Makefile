@@ -43,6 +43,9 @@ cniplugins_zst      =	  cni-plugins-1.1.1-2-x86_64.pkg.tar.zst
 cniplugins_download =     $(mirror)/community/os/x86_64/$(cniplugins_zst)
 conmon_zst          =     conmon-1:2.1.0-1-x86_64.pkg.tar.zst
 conmon_download     =     $(mirror)/community/os/x86_64/$(conmon_zst)
+common_zst          =     containers-common-1:0.48.0-1-any.pkg.tar.zst
+common_download     =     $(mirror)/community/os/x86_64/$(common_zst)
+
 
 all: containerd runc kubernetes nerdctl critools ## Install containerd and runc from source!
 
@@ -97,6 +100,10 @@ cniplugins_aur: ## Install arch linux ebtables
 conmon_aur: ## Install arch linux conmon
 	wget $(conmon_download)
 	pacman -U $(conmon_zst)
+
+common_aur: ## Install arch linux containers-common
+	wget $(common_download)
+	pacman -U $(common_zst)
 
 install: etc bin install_containerd install_runc install_kubernetes install_nerdctl install_critools install_helm install_crio ## Global install (all the artifacts)
 

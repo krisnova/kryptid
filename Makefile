@@ -185,6 +185,7 @@ clean:
 	rm -rvf runc*
 	rm -rvf cri-tools*
 	rm -rvf ebtables*
+	rm -rvf containers*
 	rm -rvf *.tar.*
 
 .PHONY: help

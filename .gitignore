@@ -9,3 +9,4 @@ cri-tools*
 .idea
 ebtables*
 conntrack*
+kubeconfig.out

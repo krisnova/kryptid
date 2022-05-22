@@ -147,6 +147,7 @@ clean:
 	rm -rvf containerd*
 	rm -rvf nerdctl*
 	rm -rvf conntrack*
+	rm -rvf helm*
 	rm -rvf runc*
 	rm -rvf cri-tools*
 	rm -rvf ebtables*

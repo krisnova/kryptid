@@ -16,8 +16,8 @@
 # =========================================================================== #
 
 hostname=$(cat /proc/sys/kernel/hostname)
-domain="localhost"
-ip="10.6.6.200"
+domain="nivenly.com"
+ip="10.6.6.100"
 podcidr="192.168.0.0/16" # Taken from Calico documentation
 
 echo "--------------------------------------------------------------"
@@ -74,7 +74,7 @@ karch-reset
 #      --skip-log-headers         If true, avoid headers when opening log files
 #  -v, --v Level                  number for the log level verbosity
 kubeadm init \
-        --cri-socket /var/run/containerd/containerd.sock \
+        --cri-socket unix:///var/run/containerd/containerd.sock \
         --pod-network-cidr="$podcidr" \
         --apiserver-advertise-address="$ip" \
         --apiserver-cert-extra-sans="$domain" \

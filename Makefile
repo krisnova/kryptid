@@ -41,7 +41,8 @@ conntrack_zst       =     conntrack-tools-1.4.6-2-x86_64.pkg.tar.zst
 conntrack_download  =     $(mirror)/extra/os/x86_64/$(conntrack_zst)
 cniplugins_zst      =	  cni-plugins-1.1.1-2-x86_64.pkg.tar.zst
 cniplugins_download =     $(mirror)/community/os/x86_64/$(cniplugins_zst)
-
+conmon_zst          =     conmon-1:2.1.0-1-x86_64.pkg.tar.zst
+conmon_download     =     $(mirror)/community/os/x86_64/$(conmon_zst)
 
 all: containerd runc kubernetes nerdctl critools ## Install containerd and runc from source!
 
@@ -78,7 +79,7 @@ nerdctl: clone ## Install nerdctl (nerdctl is docker drop-in for containerd)
 critools: clone ## Install critools (crictl is required for kubeadm)
 	cd cri-tools && make $(make_flags)
 
-archlinux: ebtables_aur conntrack_aur cniplugins_aur ## Arch linux specific dependencies. Good luck everyone else.
+archlinux: ebtables_aur conntrack_aur cniplugins_aur conmon_aur ## Arch linux specific dependencies. Good luck everyone else.
 
 ebtables_aur: ## Install arch linux ebtables
 	mkdir -p ebtables
@@ -93,6 +94,10 @@ cniplugins_aur: ## Install arch linux ebtables
 	wget $(cniplugins_download)
 	pacman -U $(cniplugins_zst)
 
+conmon_aur: ## Install arch linux conmon
+	wget $(conmon_download)
+	pacman -U $(conmon_zst)
+
 install: bin install_containerd install_runc install_kubernetes install_nerdctl install_critools install_helm install_crio ## Global install (all the artifacts)
 	@cp -rv etc/* /etc
 
@@ -106,7 +111,7 @@ clone: ## Clone containerd from Makefile flags
 	@if [ ! -d cri-tools ]; then git clone $(critools_clone); cd cri-tools && git checkout tags/$(critools_version) -b $(critools_version); fi
 
 logs: ## Run the logs
-	journalctl -f -u containerd -u kubelet
+	journalctl -f -u crio -u kubelet
 
 kubelet-errors: ## Run the kubelet logs
 	journalctl -fu kubelet | grep --color -A 1 -B 7 "Error: "
@@ -114,25 +119,29 @@ kubelet-errors: ## Run the kubelet logs
 enable: ## Enable systemd services
 	systemctl daemon-reload
 	systemctl enable kubelet
-	systemctl enable containerd
+	#systemctl enable containerd
+	systemctl enable crio
 
 restart: ## Restart systemd services
 	systemctl daemon-reload
-	systemctl restart containerd
+	#systemctl restart containerd
+	systemctl restart crio
 	systemctl restart kubelet
 
 start: ## Start systemd services
 	systemctl daemon-reload
-	systemctl start containerd
+	#systemctl start containerd
+	systemctl start crio
 	systemctl start kubelet
 
 stop: ## Stop systemd services
 	systemctl daemon-reload
-	systemctl stop containerd
+	#systemctl stop containerd
+	systemctl stop crio
 	systemctl stop kubelet
 
 install_crio: ## Install crio
-	cd cri-o && make $(make_flags) cri-o
+	cd cri-o && make $(make_flags) install
 
 install_nerdctl: ## Install nerdctl
 	cd nerdctl && make $(make_flags) install

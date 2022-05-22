@@ -74,7 +74,7 @@ karch-reset
 #      --skip-log-headers         If true, avoid headers when opening log files
 #  -v, --v Level                  number for the log level verbosity
 kubeadm init \
-        --cri-socket unix:///var/run/containerd/containerd.sock \
+        --cri-socket unix:///var/run/crio/crio.sock \
         --pod-network-cidr="$podcidr" \
         --apiserver-advertise-address="$ip" \
         --apiserver-cert-extra-sans="$domain" \

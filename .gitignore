@@ -3,6 +3,7 @@
 /runc
 /ebtables
 /nerdctl
+/helm
 cri-tools*
 .idea
 ebtables*

@@ -118,6 +118,7 @@ start: ## Start systemd services
 	systemctl start kubelet
 
 stop: ## Stop systemd services
+	systemctl daemon-reload
 	systemctl stop containerd
 	systemctl stop kubelet
 

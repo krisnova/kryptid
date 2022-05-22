@@ -16,11 +16,11 @@
 # =========================================================================== #
 
 # Cilium Install
-helm repo add cilium https://helm.cilium.io/
-helm install cilium cilium/cilium --namespace=kube-system
+#helm repo add cilium https://helm.cilium.io/
+#helm install cilium cilium/cilium --namespace=kube-system
 
 # Flannel Install
-#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 # Calico Install
 #kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml

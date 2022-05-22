@@ -29,6 +29,8 @@ nerdctl_version     =     v0.20.0
 nerdctl_clone       =     git@github.com:containerd/nerdctl.git
 helm_version        =     v3.9.0
 helm_clone          =	  git@github.com:helm/helm.git
+crio_version        =     v1.22.4
+crio_clone          =     git@github.com:cri-o/cri-o.git
 make_flags          =     -j32
 
 # Arch linux specific
@@ -46,6 +48,9 @@ all: containerd runc kubernetes nerdctl critools ## Install containerd and runc 
 .PHONY: bin
 bin: ## Add the bin scripts to $PATH
 	@cp -rv bin/* /usr/bin
+
+crio: clone ## Install crio
+	cd cri-o && make $(make_flags)
 
 containerd: clone ## Install containerd from local source
 	cd containerd && make $(make_flags)
@@ -88,11 +93,12 @@ cniplugins_aur: ## Install arch linux ebtables
 	wget $(cniplugins_download)
 	pacman -U $(cniplugins_zst)
 
-install: bin install_containerd install_runc install_kubernetes install_nerdctl install_critools install_helm ## Global install (all the artifacts)
+install: bin install_containerd install_runc install_kubernetes install_nerdctl install_critools install_helm install_crio ## Global install (all the artifacts)
 	@cp -rv etc/* /etc
 
 clone: ## Clone containerd from Makefile flags
 	@if [ ! -d containerd ]; then git clone $(containerd_clone); cd containerd && git checkout tags/$(containerd_version) -b $(containerd_version); fi
+	@if [ ! -d cri-o ]; then git clone $(crio_clone); cd crio && git checkout tags/$(crio_version) -b $(crio_version); fi
 	@if [ ! -d runc ]; then git clone $(runc_clone); cd runc && git checkout tags/$(runc_version) -b $(runc_version); fi
 	@if [ ! -d helm ]; then git clone $(helm_clone); cd helm && git checkout tags/$(helm_version) -b $(helm_version); fi
 	@if [ ! -d nerdctl ]; then git clone $(nerdctl_clone); cd nerdctl && git checkout tags/$(nerdctl_version) -b $(nerdctl_version); fi
@@ -125,6 +131,9 @@ stop: ## Stop systemd services
 	systemctl stop containerd
 	systemctl stop kubelet
 
+install_crio: ## Install crio
+	cd cri-o && make $(make_flags) cri-o
+
 install_nerdctl: ## Install nerdctl
 	cd nerdctl && make $(make_flags) install
 
@@ -145,13 +154,14 @@ install_containerd: ## Install containerd
 	@cp -v containerd/containerd.service ./etc/systemd/system/containerd.service
 
 clean:
-	@echo "This will DESTROY local copies of kubernetes, conntrack, cri-tools, containerd, runc, ebtables"
+	@echo "This will DESTROY local copies of source code!"
 	read -p "Press any key to continue..."
 	rm -rvf kubernetes*
 	rm -rvf containerd*
 	rm -rvf nerdctl*
 	rm -rvf conntrack*
 	rm -rvf helm*
+	rm -rvf cri-o*
 	rm -rvf runc*
 	rm -rvf cri-tools*
 	rm -rvf ebtables*

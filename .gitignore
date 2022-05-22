@@ -1,8 +1,9 @@
-containerd
-runc
-ebtables
+/containerd
+/kubernetes
+/runc
+/ebtables
+/nerdctl
 cri-tools*
-kubernetes
 .idea
 ebtables*
 conntrack*

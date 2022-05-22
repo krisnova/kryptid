@@ -35,7 +35,7 @@ ebtables_download   =     https://aur.archlinux.org/cgit/aur.git/snapshot/$(ebta
 conntrack_zst       =     conntrack-tools-1.4.6-2-x86_64.pkg.tar.zst
 conntrack_download  =     https://mirror.ubrco.de/archlinux/extra/os/x86_64/$(conntrack_zst)
 
-all: containerd runc kubernetes ## Install containerd and runc from source!
+all: containerd runc kubernetes nerdctl critools ## Install containerd and runc from source!
 
 .PHONY: bin
 bin: ## Add the bin scripts to $PATH

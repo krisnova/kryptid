@@ -85,7 +85,7 @@ cniplugins_aur: ## Install arch linux ebtables
 	wget $(cniplugins_download)
 	pacman -U $(cniplugins_zst)
 
-install: stop bin install_containerd install_runc install_kubernetes install_nerdctl install_critools install_helm ## Global install (all the artifacts)
+install: bin install_containerd install_runc install_kubernetes install_nerdctl install_critools install_helm ## Global install (all the artifacts)
 	@cp -rv etc/* /etc
 
 clone: ## Clone containerd from Makefile flags

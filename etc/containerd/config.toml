@@ -1,2 +1,6 @@
 [debug]
   level = "debug"
+[plugins.cri]
+  [plugins.cri.cni]
+    bin_dir = "/opt/cni/bin"
+    conf_dir = "/etc/cni/net.d"

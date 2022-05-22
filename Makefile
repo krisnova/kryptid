@@ -142,6 +142,7 @@ stop: ## Stop systemd services
 
 install_crio: ## Install crio
 	cd cri-o && make $(make_flags) install
+	cp -v /usr/local/lib/systemd/system/crio.service /lib/systemd/system/crio.service
 
 install_nerdctl: ## Install nerdctl
 	cd nerdctl && make $(make_flags) install

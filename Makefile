@@ -27,6 +27,8 @@ critools_version    =     v1.24.1
 critools_clone      =     git@github.com:kubernetes-sigs/cri-tools.git
 nerdctl_version     =     v0.20.0
 nerdctl_clone       =     git@github.com:containerd/nerdctl.git
+helm_version        =     v3.9.0
+helm_clone          =	  git@github.com:helm/helm.git
 make_flags          =     -j32
 
 # Arch linux specific
@@ -59,6 +61,9 @@ kubelet: clone ## Install kubelet from local source
 kubeadm: clone cri-tools ## Install kubernetes from local source
 	cd kubernetes && make $(make_flags) kubeadm
 
+helm: clone ## Install helm
+	cd helm && make $(make_flags)
+
 nerdctl: clone ## Install nerdctl (nerdctl is docker drop-in for containerd)
 	cd nerdctl && make $(make_flags)
 
@@ -80,12 +85,13 @@ cniplugins_aur: ## Install arch linux ebtables
 	wget $(cniplugins_download)
 	pacman -U $(cniplugins_zst)
 
-install: stop bin install_containerd install_runc install_kubernetes install_nerdctl install_critools ## Global install (all the artifacts)
+install: stop bin install_containerd install_runc install_kubernetes install_nerdctl install_critools install_helm ## Global install (all the artifacts)
 	@cp -rv etc/* /etc
 
 clone: ## Clone containerd from Makefile flags
 	@if [ ! -d containerd ]; then git clone $(containerd_clone); cd containerd && git checkout tags/$(containerd_version) -b $(containerd_version); fi
 	@if [ ! -d runc ]; then git clone $(runc_clone); cd runc && git checkout tags/$(runc_version) -b $(runc_version); fi
+	@if [ ! -d helm ]; then git clone $(helm_clone); cd helm && git checkout tags/$(helm_version) -b $(helm_version); fi
 	@if [ ! -d nerdctl ]; then git clone $(nerdctl_clone); cd nerdctl && git checkout tags/$(nerdctl_version) -b $(nerdctl_version); fi
 	@if [ ! -d kubernetes ]; then git clone $(kubernetes_clone); cd kubernetes && git checkout tags/$(kubernetes_version) -b $(kubernetes_version); fi
 	@if [ ! -d cri-tools ]; then git clone $(critools_clone); cd cri-tools && git checkout tags/$(critools_version) -b $(critools_version); fi
@@ -123,6 +129,9 @@ install_runc: ## Install runc
 
 install_critools: ## Install critools
 	cd cri-tools && make $(make_flags) install
+
+install_helm: ## Install helm
+	cd helm && make $(make_flags) install
 
 install_kubernetes: ## Install kuberneretes
 	cp -rv kubernetes/_output/bin/* /usr/bin

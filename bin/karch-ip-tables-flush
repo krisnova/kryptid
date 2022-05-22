@@ -15,13 +15,23 @@
 #                                                                             #
 # =========================================================================== #
 
-# Cilium Install
-helm repo add cilium https://helm.cilium.io/
-helm install cilium cilium/cilium --namespace=kube-system
-
-# Flannel Install
-#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-
-# Calico Install
-#kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
-#kubectl create -f https://projectcalico.docs.tigera.io/manifests/custom-resources.yaml
+# Accept all traffic first to avoid ssh lockdown  via iptables firewall rules #
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+ 
+# Flush All Iptables Chains/Firewall rules #
+iptables -F
+ 
+# Delete all Iptables Chains #
+iptables -X
+ 
+# Flush all counters too #
+iptables -Z 
+# Flush and delete all nat and  mangle #
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+iptables -t raw -F
+iptables -t raw -X

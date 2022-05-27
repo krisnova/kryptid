@@ -25,3 +25,13 @@ make
 sudo -E make install
 sudo -E make enable start
 ```
+
+### CNI
+
+To destroy CNI virtual interfaces
+
+
+```
+ip link list
+ip link destroy <interface>
+```

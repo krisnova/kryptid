@@ -9,5 +9,5 @@ cri-tools*
 .idea
 ebtables*
 conntrack*
-kubeconfig.out
+*kubeconfig.out
 cluster.yaml

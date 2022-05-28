@@ -17,7 +17,10 @@
 
 # Cilium Install
 helm repo add cilium https://helm.cilium.io/
-helm unsinstall cilium --namespace=kube-sytem
+helm uninstall cilium --namespace=kube-sytem
+
+read -p "Press enter to install Cilium CNI..."
+
 helm install cilium cilium/cilium --namespace=kube-system
 
 # Untaint the control-plane

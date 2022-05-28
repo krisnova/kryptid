@@ -15,6 +15,13 @@
 #                                                                             #
 # =========================================================================== #
 
+# Calico Uninstall
+
+kubectl delete -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
+kubectl delete -f https://projectcalico.docs.tigera.io/manifests/custom-resources.yaml
+
+read -p "Press enter to install Calico CNI..."
+
 # Calico Install
 kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
 kubectl create -f https://projectcalico.docs.tigera.io/manifests/custom-resources.yaml

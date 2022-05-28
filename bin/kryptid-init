@@ -18,10 +18,17 @@
 hostname=$(cat /proc/sys/kernel/hostname)
 domain="nivenly.com"
 ip="10.6.6.100"
-#podcidr="10.217.0.0/16"  # Cilium
-podcidr="192.168.0.0/16" # Calico
-#podcidr="10.85.0.0/16"   # Flannel
-#podcidr="10.85.0.0/16"   # Bridge
+
+# From @mauilion
+#
+# From the kubeadm perspective it REALLY
+# doesn't matter as long as this does NOT
+# conflict with your "host" network.
+#
+#
+#podcidr="192.168.0.0/16" # Calico Suggested
+podcidr="192.168.0.0/16"
+
 
 
 echo "--------------------------------------------------------------"
@@ -83,6 +90,7 @@ kubeadm init \
         --apiserver-advertise-address="$ip" \
         --apiserver-cert-extra-sans="$domain" \
         --control-plane-endpoint="$domain" \
+	--skip-token-print \
         --node-name="$host"
 
 echo "--------------------------------------------------------------"

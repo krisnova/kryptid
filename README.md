@@ -35,3 +35,9 @@ To destroy CNI virtual interfaces
 ip link list
 ip link destroy <interface>
 ```
+
+### Nova todo
+
+ - cilium install --ipam=kubernetes --helm-set endpointRoutes.enabled=true
+ - Add cilium cli tool the Makefile
+ - Add cilium --ipam kubernetes

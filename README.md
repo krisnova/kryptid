@@ -26,18 +26,12 @@ sudo -E make install
 sudo -E make enable start
 ```
 
-### CNI
+### Cilium CLI
 
-To destroy CNI virtual interfaces
-
+Suggest using Cilium CNI
 
 ```
-ip link list
-ip link destroy <interface>
+make cilium-cli
+sudo -E make install_cilium_cli
+./bin/kryptid-cni-cilium
 ```
-
-### Nova todo
-
- - cilium install --ipam=kubernetes --helm-set endpointRoutes.enabled=true
- - Add cilium cli tool the Makefile
- - Add cilium --ipam kubernetes

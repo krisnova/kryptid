@@ -16,12 +16,15 @@
 # =========================================================================== #
 
 # Cilium Install
-helm repo add cilium https://helm.cilium.io/
-helm uninstall cilium --namespace=kube-sytem
+#helm repo add cilium https://helm.cilium.io/
+#helm uninstall cilium --namespace=kube-sytem
+
+cilium uninstall
 
 read -p "Press enter to install Cilium CNI..."
 
-helm install cilium cilium/cilium --namespace=kube-system
+#helm install cilium cilium/cilium --namespace=kube-system
+cilium install --ipam=kubernetes --helm-set endpointRoutes.enabled=true
 
 # Untaint the control-plane
 kubectl taint nodes --all node-role.kubernetes.io/control-plane-

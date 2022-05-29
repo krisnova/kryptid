@@ -31,6 +31,8 @@ helm_version        =     v3.9.0
 helm_clone          =	  git@github.com:helm/helm.git
 crio_version        =     v1.22.4
 crio_clone          =     git@github.com:cri-o/cri-o.git
+cilium_cli_version  =     v0.10.6
+cilium_cli_clone    =     git@github.com:cilium/cilium-cli.git
 make_flags          =     -j32
 
 # Arch linux specific
@@ -48,6 +50,8 @@ common_download     =     $(mirror)/community/os/x86_64/$(common_zst)
 
 
 all: containerd runc kubernetes nerdctl critools ## Install containerd and runc from source!
+
+install: etc bin install_containerd install_runc install_kubernetes install_cilium_cli install_nerdctl install_critools install_helm install_crio ## Global install (all the artifacts)
 
 .PHONY: bin
 bin: ## Add the bin scripts to $PATH
@@ -79,6 +83,9 @@ helm: clone ## Install helm
 nerdctl: clone ## Install nerdctl (nerdctl is docker drop-in for containerd)
 	cd nerdctl && make $(make_flags)
 
+cilium-cli: clone ## Install cilium cli tool
+	cd cilium-cli && make $(make_flags)
+
 critools: clone ## Install critools (crictl is required for kubeadm)
 	cd cri-tools && make $(make_flags)
 
@@ -105,8 +112,6 @@ common_aur: ## Install arch linux containers-common
 	wget $(common_download)
 	pacman -U $(common_zst)
 
-install: etc bin install_containerd install_runc install_kubernetes install_nerdctl install_critools install_helm install_crio ## Global install (all the artifacts)
-
 .PHONY: etc
 etc:
 	cp -rv etc/* /etc
@@ -114,6 +119,7 @@ etc:
 clone: ## Clone containerd from Makefile flags
 	@if [ ! -d containerd ]; then git clone $(containerd_clone); cd containerd && git checkout tags/$(containerd_version) -b $(containerd_version); fi
 	@if [ ! -d cri-o ]; then git clone $(crio_clone); cd cri-o && git checkout tags/$(crio_version) -b $(crio_version); fi
+	@if [ ! -d cilium-cli ]; then git clone $(cilium_cli_clone); cd cilium-cli && git checkout tags/$(cilium_cli_version) -b $(cilium_cli_version); fi
 	@if [ ! -d runc ]; then git clone $(runc_clone); cd runc && git checkout tags/$(runc_version) -b $(runc_version); fi
 	@if [ ! -d helm ]; then git clone $(helm_clone); cd helm && git checkout tags/$(helm_version) -b $(helm_version); fi
 	@if [ ! -d nerdctl ]; then git clone $(nerdctl_clone); cd nerdctl && git checkout tags/$(nerdctl_version) -b $(nerdctl_version); fi
@@ -156,6 +162,9 @@ install_crio: ## Install crio
 
 install_nerdctl: ## Install nerdctl
 	cd nerdctl && make $(make_flags) install
+
+install_cilium_cli: ## Install cilium cli
+	cd cilium-cli && make $(make_flags) install
 
 install_runc: ## Install runc
 	cp -rv runc/runc /usr/bin

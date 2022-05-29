@@ -6,6 +6,7 @@ iptables*
 /nerdctl
 /cri-o
 /helm
+/cilium-cli
 cri-tools*
 .idea
 ebtables*

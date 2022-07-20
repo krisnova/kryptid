@@ -1,6 +1,12 @@
 # kyrptid
 
-From the creators of [kubicorn](https://github.com/kubicorn/kubicorn) comes an exciting new adventure. The closest thing to Kubernetes from scratch.
+---
+
+Please help me become an independent programmer by donating directly to my `ko-fi` site below.
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/D1D8CXLHZ) 
+
+---
 
 An opinionated Kubernetes distribution specifically for Arch linux.
 
